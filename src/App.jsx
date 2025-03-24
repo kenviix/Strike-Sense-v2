@@ -75,7 +75,7 @@ function App() {
 							message.data["isblocked"] === 0 ? "No" : "Yes",
 						]}
 							punchData={punchData} />} />
-						<Route path='/analytics' element={<AnalyticsPage />} />
+						<Route path='/analytics' element={<AnalyticsPage punchData={punchData} />} />
 						<Route path='/settings' element={<SettingsPage />} />
 					</Routes></>
 			) : (
