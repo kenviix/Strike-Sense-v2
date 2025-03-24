@@ -8,6 +8,11 @@ import SettingsPage from "./pages/SettingsPage";
 import { useEffect, useState } from "react";
 import { addPunchData, getPunchData } from "./Data/Data";
 const WS_URL = "wss://aws-production-4ef1.up.railway.app";
+import "./loader.css";
+import Hero from "./components/common/Hero";
+import ClientPage from "./pages/ClientPage";
+import StakeholderProfilePage from "./pages/StakeholderProfilePage";
+import StakeholderDashboard from "./pages/StakeholderDashboard";
 
 function App() {
 	const [message, setMessage] = useState("");
@@ -53,20 +58,17 @@ function App() {
 		return () => ws.close();
 	}, []);
 
-	// console.log(message.data["timestamp"]);
+	console.log(message.data);
 
 	return (
-		<div className='flex h-screen bg-gray-900 text-gray-100 overflow-hidden'>
-			{/* BG
-			<div className='fixed inset-0 z-0'>
-				<div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
-				<div className='absolute inset-0 backdrop-blur-sm' />
-			</div> */}
+		<>
 			{message ? (
-				<>
-					<Sidebar />
+				<div className='flex h-screen bg-gray-900 text-gray-100 overflow-hidden '>
+
 					<Routes>
-						<Route path='/' element={<OverviewPage punch={[
+						<Route path='/' element={<Hero />} />
+
+						<Route path='/user' element={<OverviewPage punch={[
 							message.data["timestamp"].substring(0, 11),
 							message.data["timestamp"].substring(11, 19),
 							message.data["Punch power (N)"],
@@ -77,11 +79,23 @@ function App() {
 							punchData={punchData} />} />
 						<Route path='/analytics' element={<AnalyticsPage punchData={punchData} />} />
 						<Route path='/settings' element={<SettingsPage />} />
-					</Routes></>
+						<Route path='/stakeholder' element={<ClientPage punchData={punchData} />} />
+						<Route path='/stakeholderProfile' element={<StakeholderProfilePage />} />
+						<Route path='/StakeholderDashboard' element={<StakeholderDashboard punch={[
+							message.data["timestamp"].substring(0, 11),
+							message.data["timestamp"].substring(11, 19),
+							message.data["Punch power (N)"],
+							message.data["Punch Speed (km/h)"],
+							message.data["Reflex time (ms)"],
+							message.data["isblocked"] === 0 ? "No" : "Yes",
+						]}
+							punchData={punchData} />} />
+
+					</Routes></div>
 			) : (
-				<p>Waiting for data...</p>
+				<div className="flex h-screen bg-gray-900 text-gray-100 overflow-hidden justify-center items-center"><div className=" lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
 			)}
-		</div>
+		</>
 	);
 }
 
